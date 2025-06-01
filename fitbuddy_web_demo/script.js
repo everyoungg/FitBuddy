@@ -2,18 +2,6 @@ const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// ✅ TTS 음성 출력
-let lastSpoken = "";
-function speak(text) {
-  if (lastSpoken === text) return;
-  lastSpoken = text;
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "ko-KR";
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utterance);
-}
-
 // ✅ 각도 계산 함수
 function calculateAngle(a, b, c) {
   const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
@@ -32,23 +20,7 @@ function getJointAngles(landmarks) {
   };
 }
 
-// ✅ 자세 평가 함수
-function checkPosture(angles) {
-  let feedback = "자세 좋습니다!";
-
-  if (angles.무릎 > 170) {
-    feedback = "무릎이 너무 펴졌어요!";
-  } else if (angles.무릎 < 90) {
-    feedback = "무릎을 너무 굽혔어요!";
-  } else if (angles.엉덩이 < 150) {
-    feedback = "엉덩이가 너무 낮아요!";
-  }
-
-  document.getElementById("feedback").innerText = feedback;
-  speak(feedback); // TTS로 출력
-}
-
-// ✅ Mediapipe Pose 초기화
+// ✅ Mediapipe Pose 초기화 (수정된 부분!)
 const pose = new Pose({
   locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
 });
@@ -73,7 +45,6 @@ pose.onResults((results) => {
 
     const angles = getJointAngles(results.poseLandmarks);
     console.log("📐 관절 각도:", angles);
-    checkPosture(angles); // 음성 피드백 포함
   }
 });
 
