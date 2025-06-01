@@ -2,11 +2,13 @@ import pickle
 import numpy as np
 
 # 📦 모델 & 스케일러 불러오기
-with open('fitbuddy_web_demo/plank_model/model/plank_dp.pkl', 'rb') as f:
+
+with open('plank_model/model/input_scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
+
+with open('plank_model/model/plank_dp.pkl', 'rb') as f:
     model = pickle.load(f)
 
-with open('fitbuddy_web_demo/plank_model/model/input_scaler.pkl', 'rb') as f:
-    scaler = pickle.load(f)
 
 # ✅ 예측 함수
 def predict_pose(keypoints):
