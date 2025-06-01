@@ -3,12 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <title>FitBuddy</title>
+  <style>
+    #container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+    }
+    #video, #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #feedback {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: white;
+      color: red;
+      padding: 8px;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-  <h2>📷 실시간 웹캠</h2>
+  <h2>📷 실시간 자세 추적</h2>
+  <div id="container">
+    <video id="video" autoplay playsinline width="640" height="480"></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <div id="feedback">자세 분석 중...</div>
+  </div>
 
-  <video id="webcam" autoplay playsinline width="640" height="480" style="border:1px solid #ccc;"></video>
+  <!-- Mediapipe 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
 
-  <script src="script.js"></script>
+  <!-- JS 코드 -->
+  <script src="script.js"></script> <!-- 기존 자세 분석 코드 -->
+  <script src="tts.js"></script>     <!-- TTS 음성 피드백 코드 -->
 </body>
 </html>
