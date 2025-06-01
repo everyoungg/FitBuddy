@@ -31,8 +31,31 @@
 
   <title>fit_buddy</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    #camera-feed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    #flutter_target {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
 </head>
 <body>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+  <script src="pose_bridge.js"></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
