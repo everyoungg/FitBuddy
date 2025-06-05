@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>FitBuddy Web Demo</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+    }
+    #welcome {
+      text-align: center;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #1a73e8;
+      margin-bottom: 2rem;
+    }
+    #startBtn {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #startBtn:hover {
+      background-color: #1557b0;
+    }
+    #main {
+      text-align: center;
+    }
+    #canvas {
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div id="welcome">
+    <h1>FitBuddy에 오신 것을 환영합니다!</h1>
+    <button id="startBtn">관절 인식 시작</button>
+  </div>
+  <div id="main" style="display:none;">
+    <video id="video" width="640" height="480" style="display:none"></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
+  <script src="script.js"></script>
+</body>
+</html> 
