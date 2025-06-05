@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>운동 카메라</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    video, canvas {
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transform: scaleX(-1); /* 좌우반전 */
+    }
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #333;
+      min-height: 2em;
+    }
+    #canvas {
+      position: absolute;
+      top: 0; /* 기존 80px → 0으로 변경 */
+      left: 50%;
+      transform: translateX(-50%) scaleX(-1);
+      pointer-events: none;
+    }
+    #container {
+      position: relative;
+      width: 640px;
+      height: 480px;
+    }
+  </style>
+</head>
+<body>
+  <h1>운동 카메라</h1>
+  <div id="container">
+    <video id="video" width="640" height="480" autoplay playsinline></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+  </div>
+  <div id="feedback"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.5/drawing_utils.js"></script>
+  <script>
+const videoElement = document.getElementById('video');
+const canvasElement = document.getElementById('canvas');
+const canvasCtx = canvasElement.getContext('2d');
+
+const pose = new Pose({
+  locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/${file}`
+});
+pose.setOptions({
+  modelComplexity: 1,
+  smoothLandmarks: true,
+  enableSegmentation: false,
+  minDetectionConfidence: 0.5,
+  minTrackingConfidence: 0.5
+});
+
+pose.onResults(onResults);
+
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    videoElement.srcObject = stream;
+    videoElement.play();
+    videoElement.onloadeddata = () => {
+      sendVideoFrame();
+    };
+  } catch (err) {
+    alert('카메라를 사용할 수 없습니다: ' + err);
+  }
+}
+
+function sendVideoFrame() {
+  pose.send({ image: videoElement });
+  // 다음 프레임은 onResults에서 다시 호출
+}
+
+function calculateAngle(a, b, c) {
+  const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+  let angle = Math.abs(radians * (180.0 / Math.PI));
+  if (angle > 180.0) angle = 360 - angle;
+  return parseFloat(angle.toFixed(2));
+}
+
+function getJointAngles(landmarks) {
+  return {
+    팔꿈치: calculateAngle(landmarks[11], landmarks[13], landmarks[15]),
+    무릎: calculateAngle(landmarks[23], landmarks[25], landmarks[27]),
+    엉덩이: calculateAngle(landmarks[11], landmarks[23], landmarks[25]),
+    몸통: calculateAngle(landmarks[11], landmarks[23], landmarks[27])
+  };
+}
+
+function onResults(results) {
+  canvasCtx.save();
+  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+  if (results.poseLandmarks) {
+    for (const landmark of results.poseLandmarks) {
+      canvasCtx.beginPath();
+      canvasCtx.arc(landmark.x * canvasElement.width, landmark.y * canvasElement.height, 5, 0, 2 * Math.PI);
+      canvasCtx.fillStyle = 'red';
+      canvasCtx.fill();
+    }
+    // 각도 계산 및 출력
+    const angles = getJointAngles(results.poseLandmarks);
+    console.log("📐 관절 각도:", angles);
+    // 화면에 표시 (선택)
+    document.getElementById('feedback').innerText =
+      `팔꿈치: ${angles.팔꿈치}°  무릎: ${angles.무릎}°  엉덩이: ${angles.엉덩이}°  몸통: ${angles.몸통}°`;
+  }
+  canvasCtx.restore();
+  requestAnimationFrame(sendVideoFrame);
+}
+
+window.addEventListener('load', startCamera);
+  </script>
+</body>
+</html>
