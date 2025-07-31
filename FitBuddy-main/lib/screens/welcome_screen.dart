@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -103,31 +104,31 @@ class WelcomeScreen extends StatelessWidget {
               Positioned(
                 left: 435,
                 top: 592,
-                child: Container(
-                  width: 390,
-                  height: 74,
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFD9D9D9),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    );
+                  },
+                  child: Container(
+                    width: 390,
+                    height: 74,
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFFD9D9D9),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 576,
-                top: 609,
-                child: SizedBox(
-                  width: 210,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      '로그인',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 32,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w800,
+                    child: const Center(
+                      child: Text(
+                        '로그인',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 32,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
